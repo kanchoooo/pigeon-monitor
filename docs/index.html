@@ -9,6 +9,11 @@
     <meta property="og:description" content="자리를 비우면 내 화면에 비둘기가 날아와요. 쫓아가서 생포하고 네컷으로 자랑!" />
     <meta property="og:image" content="https://kanchoooo.github.io/pigeon-monitor/img/screen.png" />
     <link rel="icon" href="img/icon.png" />
+    <!-- 공식 다운로드 페이지는 이지티켓으로 옮겼다: ?os= 같은 쿼리를 그대로 들고 이동 (자바스크립트가 꺼져 있으면 아래 페이지가 그대로 보인다) -->
+    <link rel="canonical" href="https://easyticket.co.kr/apps/pigeon-monitor/" />
+    <script>
+      location.replace('https://easyticket.co.kr/apps/pigeon-monitor/' + location.search + location.hash)
+    </script>
     <style>
       /* 다운로드 링크: GitHub Releases 의 latest/download 는 주소가 고정이라 새 버전이 나와도 그대로 쓸 수 있다 */
       :root {

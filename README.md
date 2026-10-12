@@ -7,7 +7,7 @@
 
 - 맥 13 이상 (애플 실리콘·인텔): [PigeonMonitor-mac.dmg](https://github.com/kanchoooo/pigeon-monitor/releases/latest/download/PigeonMonitor-mac.dmg)
 - 윈도우 10/11: [PigeonMonitor-Setup.exe](https://github.com/kanchoooo/pigeon-monitor/releases/latest/download/PigeonMonitor-Setup.exe) — "Windows의 PC 보호" 창이 뜨면 **추가 정보 → 실행**
-- 다운로드 페이지: https://kanchoooo.github.io/pigeon-monitor/ (`docs/index.html`)
+- 다운로드 페이지: https://easyticket.co.kr/apps/pigeon-monitor/ (`kanchoooo.github.io/pigeon-monitor/` 는 여기로 넘어가요)
 
 ![화면 아래에 앉은 비둘기들과 쫓기는 비둘기](docs/img/screen.png)
 
