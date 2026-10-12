@@ -1,0 +1,35 @@
+# 윈도우 빌드: v* 태그가 올라오면 설치파일을 만들어 같은 버전의 "초안" 릴리스에 올린다.
+# 맥 빌드·서명·공증은 맥북에서 (npm run release 가 전체 과정을 처리).
+name: release-windows
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: node scripts/fetch-koffi.mjs win32-x64
+      - run: npx electron-vite build
+      # electron-builder 가 파일을 동시에 올리며 초안을 여러 개 만드는 경합 방지: 초안을 먼저 하나 만들어 둔다
+      - name: Ensure draft release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="v$(node -p "require('./package.json').version")"
+          gh release view "$TAG" >/dev/null 2>&1 || gh release create "$TAG" --draft --title "$TAG" --notes ""
+      - name: Package & upload to draft release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx electron-builder --win --x64 --publish always

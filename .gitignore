@@ -1,0 +1,9 @@
+node_modules/
+out/
+dist/
+build/koffi/
+.build-*/
+*.log
+.DS_Store
+*.tsbuildinfo
+.claude/

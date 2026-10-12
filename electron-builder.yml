@@ -1,0 +1,79 @@
+# 비둘기 모니터 패키징 설정
+# - 맥: 유니버설(arm64+x64) dmg + zip(자동 업데이트용). 맥북에서 빌드 (scripts/build-mac.mjs).
+#   서명: ~/.minimi-signing 의 Developer ID 인증서 (미니미 광장과 같은 인증서)
+#   공증: 키체인 프로필 minimi-notary
+# - 윈도우: 서명 없이 NSIS. 파일명 고정(PigeonMonitor-Setup.exe) — 버전을 붙이면 SmartScreen 평판이 초기화된다.
+# - koffi(창 위치 읽기용 FFI) 네이티브 모듈은 node_modules 대신 extraResources 로 넣는다
+#   (scripts/fetch-koffi.mjs 가 build/koffi/ 에 받아 둔다)
+appId: com.pigeonmonitor.app
+# 맥에서 번들/헬퍼 이름이 한글이면 Electron 이 시작 시 크래시 → 파일 이름은 영문, 표시 이름만 한글
+productName: PigeonMonitor
+copyright: Copyright © 2026 pigeon-monitor
+npmRebuild: false
+directories:
+  output: dist
+  buildResources: build
+electronLanguages: [ko, en]
+files:
+  - out/**
+  - package.json
+  - '!**/*.map'
+  - '!out/renderer/lab.html'
+  - '!node_modules/@koromix/**'
+mac:
+  category: public.app-category.entertainment
+  icon: build/icon.png
+  hardenedRuntime: true
+  gatekeeperAssess: false
+  entitlements: build/entitlements.mac.plist
+  entitlementsInherit: build/entitlements.mac.plist
+  # 두 아키텍처 빌드에 똑같이 들어가는 koffi 바이너리 (유니버설 병합 시 x64 쪽 것을 그대로 쓴다)
+  x64ArchFiles: '**/koffi/**'
+  extraResources:
+    - from: build/koffi/darwin_x64
+      to: koffi/darwin_x64
+      filter: [koffi.node]
+    - from: build/koffi/darwin_arm64
+      to: koffi/darwin_arm64
+      filter: [koffi.node]
+  target:
+    - target: dmg
+      arch: universal
+    - target: zip
+      arch: universal
+  artifactName: PigeonMonitor-mac.${ext}
+  extendInfo:
+    CFBundleDisplayName: 비둘기 모니터
+    NSHumanReadableCopyright: Copyright © 2026 pigeon-monitor
+dmg:
+  title: 비둘기 모니터
+  artifactName: PigeonMonitor-mac.dmg
+  window:
+    width: 540
+    height: 380
+win:
+  executableName: PigeonMonitor
+  icon: build/icon.png
+  extraResources:
+    - from: build/koffi/win32_x64
+      to: koffi/win32_x64
+      filter: [koffi.node]
+  target:
+    - target: nsis
+      arch: x64
+  artifactName: PigeonMonitor-Setup.${ext}
+nsis:
+  oneClick: true
+  perMachine: false
+  runAfterFinish: true
+  createDesktopShortcut: always
+  createStartMenuShortcut: true
+  shortcutName: 비둘기 모니터
+  artifactName: PigeonMonitor-Setup.${ext}
+  deleteAppDataOnUninstall: false
+publish:
+  # 자동 업데이트·고정 다운로드 주소 (공개 저장소 Releases)
+  provider: github
+  owner: kanchoooo
+  repo: pigeon-monitor
+  releaseType: draft

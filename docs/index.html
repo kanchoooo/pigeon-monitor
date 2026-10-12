@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>비둘기 모니터 다운로드</title>
+    <meta name="description" content="자리를 비우면 내 화면에 비둘기가 날아와요. 모이를 주고, 쫓아가서 생포하고, 네컷으로 자랑해요." />
+    <meta property="og:title" content="🕊 비둘기 모니터" />
+    <meta property="og:description" content="자리를 비우면 내 화면에 비둘기가 날아와요. 쫓아가서 생포하고 네컷으로 자랑!" />
+    <meta property="og:image" content="https://kanchoooo.github.io/pigeon-monitor/img/screen.png" />
+    <link rel="icon" href="img/icon.png" />
+    <style>
+      /* 다운로드 링크: GitHub Releases 의 latest/download 는 주소가 고정이라 새 버전이 나와도 그대로 쓸 수 있다 */
+      :root {
+        --bg: #f7f2e8;
+        --dot: #ece3d2;
+        --panel: #fff;
+        --line: #e0d5c1;
+        --text: #262a35;
+        --text-2: #6d6a62;
+        --accent: #ff7a2f;
+        --ink: #262a35;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif;
+        color: var(--text);
+        background: var(--bg) radial-gradient(var(--dot) 1px, transparent 1px) 0 0 / 8px 8px;
+        min-height: 100vh;
+      }
+      .wrap {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 36px 16px 64px;
+      }
+      header {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      header img {
+        width: 88px;
+        height: 88px;
+      }
+      .logo {
+        font-size: 34px;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        margin-top: 4px;
+      }
+      .tag {
+        color: var(--text-2);
+        margin-top: 6px;
+        line-height: 1.6;
+      }
+      .shot {
+        display: block;
+        width: 100%;
+        border-radius: 14px;
+        border: 1px solid var(--line);
+        margin: 0 0 20px;
+        box-shadow: 0 8px 24px rgba(60, 50, 30, 0.1);
+      }
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        box-shadow:
+          0 2px 0 rgba(60, 50, 30, 0.08),
+          0 8px 24px rgba(60, 50, 30, 0.06);
+        overflow: hidden;
+      }
+      .tabs {
+        display: flex;
+        border-bottom: 1px dashed var(--line);
+      }
+      .tabs button {
+        flex: 1;
+        padding: 14px;
+        border: none;
+        background: #fbf8f2;
+        font: inherit;
+        font-weight: 700;
+        color: var(--text-2);
+        cursor: pointer;
+      }
+      .tabs button.active {
+        background: #fff;
+        color: var(--accent);
+        box-shadow: inset 0 -3px 0 var(--accent);
+      }
+      .pane {
+        padding: 24px;
+        display: none;
+      }
+      .pane.active {
+        display: block;
+      }
+      .dl {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
+        padding: 16px;
+        border-radius: 10px;
+        background: linear-gradient(#ff9a4d, var(--accent));
+        color: #fff;
+        font-size: 18px;
+        font-weight: 800;
+        text-decoration: none;
+        border: 1px solid #e8691a;
+      }
+      .dl:active {
+        transform: translateY(1px);
+      }
+      .meta {
+        text-align: center;
+        color: var(--text-2);
+        font-size: 13px;
+        margin: 8px 0 20px;
+      }
+      ol {
+        margin: 0;
+        padding-left: 22px;
+        line-height: 1.9;
+      }
+      li b {
+        color: var(--accent);
+      }
+      .note {
+        margin-top: 16px;
+        padding: 12px 14px;
+        border-radius: 10px;
+        background: #fbf8f2;
+        color: var(--text-2);
+        font-size: 13.5px;
+        line-height: 1.6;
+      }
+      .how {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 10px;
+        margin: 22px 0;
+        text-align: center;
+        font-size: 13.5px;
+        color: var(--text-2);
+        line-height: 1.5;
+      }
+      .how div {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 14px 6px;
+      }
+      .how b {
+        display: block;
+        font-size: 26px;
+        margin-bottom: 4px;
+      }
+      .duo {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        align-items: start;
+      }
+      .duo figure {
+        margin: 0;
+      }
+      .duo img {
+        width: 100%;
+        border-radius: 12px;
+        border: 1px solid var(--line);
+        display: block;
+      }
+      .duo figcaption {
+        text-align: center;
+        font-size: 13px;
+        color: var(--text-2);
+        margin-top: 6px;
+      }
+      footer {
+        margin-top: 24px;
+        text-align: center;
+        font-size: 12.5px;
+        color: var(--text-2);
+        line-height: 1.7;
+      }
+      footer a {
+        color: var(--text-2);
+      }
+      @media (max-width: 560px) {
+        .how {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .duo {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <img src="img/icon.png" alt="" />
+        <div class="logo">비둘기 모니터</div>
+        <div class="tag">자리를 비우면 내 화면에 비둘기가 날아와요 🕊<br />모이를 주고, 쫓아가서 생포하고, 네컷으로 자랑해요.</div>
+      </header>
+
+      <img class="shot" src="img/screen.png" alt="화면 아래에 앉은 비둘기들과, 클릭해서 쫓기는 비둘기" />
+
+      <div class="card">
+        <div class="tabs">
+          <button data-os="mac">🍎 맥 (Mac)</button>
+          <button data-os="win">🪟 윈도우 (Windows)</button>
+        </div>
+
+        <div class="pane" id="pane-mac">
+          <a class="dl" href="https://github.com/kanchoooo/pigeon-monitor/releases/latest/download/PigeonMonitor-mac.dmg">⬇ 맥용 다운로드</a>
+          <div class="meta">macOS 11 이상 · 애플 실리콘 / 인텔 모두 지원</div>
+          <ol>
+            <li>받은 <b>PigeonMonitor-mac.dmg</b> 파일을 열어요.</li>
+            <li><b>비둘기 모니터</b> 아이콘을 <b>응용 프로그램</b> 폴더로 끌어다 놓아요.</li>
+            <li>응용 프로그램(Launchpad)에서 <b>비둘기 모니터</b>를 실행해요.</li>
+            <li>1분 동안 마우스·키보드에서 손을 떼면 비둘기가 날아와요. 바로 보고 싶으면 <b>지금 부르기</b>!</li>
+          </ol>
+          <div class="note">💡 창을 닫아도 메뉴 막대(오른쪽 위)에 비둘기 아이콘으로 남아 있어요. 화면 기록 같은 권한은 필요 없어요.</div>
+        </div>
+
+        <div class="pane" id="pane-win">
+          <a class="dl" href="https://github.com/kanchoooo/pigeon-monitor/releases/latest/download/PigeonMonitor-Setup.exe">⬇ 윈도우용 다운로드</a>
+          <div class="meta">Windows 10 / 11 (64비트)</div>
+          <ol>
+            <li>받은 <b>PigeonMonitor-Setup.exe</b> 를 실행해요.</li>
+            <li>파란 창 <b>“Windows의 PC 보호”</b>가 뜨면 <b>추가 정보</b>를 누르고 <b>실행</b>을 눌러요.</li>
+            <li>설치가 끝나면 비둘기 모니터가 자동으로 열려요.</li>
+            <li>1분 동안 마우스·키보드에서 손을 떼면 비둘기가 날아와요. 바로 보고 싶으면 <b>지금 부르기</b>!</li>
+          </ol>
+          <div class="note">
+            💡 “PC 보호” 창은 새로 나온 프로그램이라 뜨는 거예요. <b>추가 정보 → 실행</b>을 누르면 설치돼요.<br />창을 닫아도 작업 표시줄 오른쪽 트레이(^)에 비둘기 아이콘으로 남아 있어요.
+          </div>
+        </div>
+      </div>
+
+      <div class="how">
+        <div><b>💤</b>자리를 비우면<br />비둘기가 와요</div>
+        <div><b>🌾</b>클릭해서<br />모이를 뿌려요</div>
+        <div><b>🎯</b>쫓아가 맞히면<br />생포!</div>
+        <div><b>📸</b>네컷·영상으로<br />자랑해요</div>
+      </div>
+
+      <div class="duo">
+        <figure>
+          <img src="img/fourcut.png" alt="비둘기 네컷 예시" />
+          <figcaption>잡은 순간이 '비둘기 네컷'으로</figcaption>
+        </figure>
+        <figure>
+          <img src="img/panel.png" alt="생포 리플레이 화면" />
+          <figcaption>슬로모션 리플레이 · MP4 저장</figcaption>
+        </figure>
+      </div>
+
+      <footer>
+        비둘기는 컴퓨터를 쓰는 동안엔 오지 않아요 · 전체화면 영상·발표 중엔 방해하지 않아요 · ESC로 모이 주기 끝<br />
+        <a href="https://github.com/kanchoooo/pigeon-monitor">GitHub에서 소스 보기</a>
+      </footer>
+    </div>
+
+    <script>
+      // 접속한 OS 탭을 자동으로 선택
+      const guess = /Windows/i.test(navigator.userAgent) ? 'win' : 'mac'
+      const select = (os) => {
+        document.querySelectorAll('.tabs button').forEach((b) => b.classList.toggle('active', b.dataset.os === os))
+        document.querySelectorAll('.pane').forEach((p) => p.classList.toggle('active', p.id === 'pane-' + os))
+      }
+      document.querySelectorAll('.tabs button').forEach((b) => b.addEventListener('click', () => select(b.dataset.os)))
+      select(new URLSearchParams(location.search).get('os') === 'win' ? 'win' : new URLSearchParams(location.search).get('os') === 'mac' ? 'mac' : guess)
+    </script>
+  </body>
+</html>

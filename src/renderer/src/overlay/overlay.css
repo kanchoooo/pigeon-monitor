@@ -1,0 +1,248 @@
+@font-face {
+  font-family: 'Galmuri11';
+  src: url('../assets/fonts/Galmuri11.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Galmuri11';
+  font-weight: bold;
+  src: url('../assets/fonts/Galmuri11-Bold.woff2') format('woff2');
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: transparent;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+body.feeding {
+  cursor: pointer;
+}
+#stage {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+}
+#debug-bg {
+  position: fixed;
+  inset: 0;
+}
+
+.pg,
+.seed,
+.feather,
+.bubble,
+.pop,
+.chase {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.seed {
+  width: 6px;
+  height: 5px;
+  margin: -5px 0 0 -3px;
+  border-radius: 50%;
+  z-index: 5;
+  box-shadow: 0 0 0 0.6px rgba(40, 30, 20, 0.55);
+}
+.seed.k0 {
+  width: 8px;
+  height: 4px;
+  margin: -4px 0 0 -4px;
+  background: linear-gradient(90deg, #4a3f36 0 30%, #e7ded2 30% 42%, #4a3f36 42%);
+}
+.seed.k1 {
+  background: #f4c430;
+}
+.seed.k2 {
+  width: 5.5px;
+  height: 5.5px;
+  margin: -5.5px 0 0 -2.7px;
+  border-radius: 1.2px;
+  background: #d8a464;
+}
+
+.feather {
+  width: 10px;
+  height: 4px;
+  border-radius: 60% 40% 60% 40%;
+  z-index: 99990;
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.25);
+}
+
+.bubble {
+  z-index: 100000;
+  font: 12px/1.25 'Galmuri11', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  color: #1f2330;
+  background: #ffffff;
+  border: 2px solid #2b2f3a;
+  border-radius: 10px;
+  padding: 4px 8px 5px;
+  white-space: nowrap;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.18);
+  margin-top: -8px;
+}
+.bubble::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -7px;
+  width: 9px;
+  height: 9px;
+  margin-left: -5px;
+  background: #ffffff;
+  border-right: 2px solid #2b2f3a;
+  border-bottom: 2px solid #2b2f3a;
+  transform: rotate(45deg);
+}
+
+.pop {
+  z-index: 100001;
+  font: bold 15px 'Galmuri11', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  color: #ffffff;
+  white-space: nowrap;
+  text-shadow:
+    -2px 0 #1f2330,
+    2px 0 #1f2330,
+    0 -2px #1f2330,
+    0 2px #1f2330,
+    -1.5px -1.5px #1f2330,
+    1.5px 1.5px #1f2330,
+    -1.5px 1.5px #1f2330,
+    1.5px -1.5px #1f2330;
+}
+.pop-tag {
+  display: inline-block;
+  font-size: 11px;
+  padding: 2px 6px 3px;
+  margin-right: 6px;
+  border-radius: 7px;
+  border: 2px solid #1f2330;
+  text-shadow: none;
+  vertical-align: 2px;
+}
+.pop-new {
+  color: #ffe066;
+  font-size: 13px;
+}
+.pop-count {
+  color: #cfe8ff;
+  font-size: 12px;
+}
+
+.pop-hit {
+  font-size: 13px;
+  color: #ffe066;
+}
+.pop-miss {
+  font-size: 12px;
+  color: #e9edf5;
+}
+
+/* 생포 추격: 맞힌 횟수 + 남은 시간 */
+.chase {
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  margin-top: -6px;
+}
+.chase .pips {
+  display: flex;
+  gap: 3px;
+  padding: 3px 5px;
+  border-radius: 99px;
+  background: rgba(31, 35, 48, 0.82);
+}
+.chase .pips i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.28);
+}
+.chase .pips i.on {
+  background: #ff7a2f;
+  box-shadow: 0 0 0 1.5px #ffd2b5;
+}
+.chase .pips i.bump {
+  animation: pip-bump 0.28s ease-out;
+}
+@keyframes pip-bump {
+  0% {
+    transform: scale(1.9);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.chase .time {
+  width: 100%;
+  height: 4px;
+  border-radius: 99px;
+  background: rgba(31, 35, 48, 0.55);
+  overflow: hidden;
+}
+.chase .time b {
+  display: block;
+  height: 100%;
+  background: #8ee07a;
+  transform-origin: left center;
+}
+.chase .time b.low {
+  background: #ff5a4f;
+}
+body.chasing {
+  cursor: crosshair;
+}
+
+.hud {
+  position: fixed;
+  left: 50%;
+  top: 14px;
+  transform: translateX(-50%);
+  z-index: 100010;
+  display: none;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 8px 8px 16px;
+  border-radius: 999px;
+  background: rgba(30, 34, 46, 0.86);
+  color: #fff;
+  font: 600 13px 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
+  cursor: default;
+}
+.hud button {
+  font: inherit;
+  color: #1f2330;
+  background: #ffd84a;
+  border: 0;
+  border-radius: 999px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+.hud button:hover {
+  background: #ffe680;
+}
+body.feeding .hud {
+  display: flex;
+}
+.bag {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 100011;
+  display: none;
+  pointer-events: none;
+  will-change: transform;
+}
+body.feeding .bag {
+  display: block;
+}

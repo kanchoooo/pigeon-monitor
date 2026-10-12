@@ -1,0 +1,35 @@
+{
+  "name": "pigeon-monitor",
+  "version": "0.1.2",
+  "private": true,
+  "description": "비둘기 모니터 — 자리를 비우면 내 화면에 비둘기가 날아와 앉는 데스크톱 펫",
+  "main": "./out/main/index.js",
+  "author": "kanchoooo",
+  "license": "UNLICENSED",
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "start": "electron-vite preview",
+    "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json",
+    "dist:mac": "node scripts/build-mac.mjs",
+    "dist:mac:local": "node scripts/fetch-koffi.mjs darwin-x64 darwin-arm64 && electron-vite build && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac --dir --publish never",
+    "dist:win": "node scripts/fetch-koffi.mjs win32-x64 && electron-vite build && electron-builder --win --x64 --publish never",
+    "release": "node scripts/release.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "electron": "^44.7.0",
+    "electron-builder": "^26.15.3",
+    "electron-vite": "^5.0.0",
+    "typescript": "5.9",
+    "vite": "^7.3.7"
+  },
+  "dependencies": {
+    "electron-updater": "^6.8.9",
+    "koffi": "3.3.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kanchoooo/pigeon-monitor.git"
+  }
+}
