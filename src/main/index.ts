@@ -1,5 +1,5 @@
 import { app, BrowserWindow, clipboard, ClipboardItem, dialog, globalShortcut, ipcMain, Menu, nativeImage, Notification, powerMonitor, shell, Tray } from 'electron'
-import { mkdirSync, readFileSync, writeFileSync } from 'fs'
+import { mkdirSync, readFileSync, renameSync, writeFileSync } from 'fs'
 import { join } from 'path'
 import { BREED, type BreedId } from '@shared/breeds'
 import { validReplay } from '@shared/replay'
@@ -175,6 +175,8 @@ function createPanel(): void {
     minHeight: 560,
     // 윈도우는 테두리·제목 표시줄을 빼고 내용이 440 이 되도록
     useContentSize: true,
+    // 맥: 다른 앱을 쓰다가 패널을 눌러도 첫 클릭부터 버튼이 눌리게
+    acceptFirstMouse: true,
     show: false,
     title: '비둘기 모니터',
     backgroundColor: '#f7f2e8',
@@ -459,6 +461,26 @@ function runScript(): void {
   }
 }
 
+/** 실기기 테스트: PIGEON_PROBE=파일 이면 0.1초마다 비둘기·패널 버튼 위치(화면 좌표)를 적는다 */
+function runProbe(): void {
+  const file = env.PIGEON_PROBE
+  if (!file) return
+  const panelJs = `(() => { const r = (e) => { if (!e) return null; const b = e.getBoundingClientRect(); return b.width ? [b.left, b.top, b.width, b.height] : null }
+    return { tab: document.querySelector('.tab.on')?.textContent ?? '', feed: r(document.querySelector('.actions .btn')), tabs: [...document.querySelectorAll('.tab')].map(r),
+      arow: r(document.querySelector('.alist .arow')), player: !!document.querySelector('.player canvas'), onboard: !!document.querySelector('.onboard') } })()`
+  setInterval(async () => {
+    const items = await overlays.probe()
+    let p: unknown = null
+    if (panel && !panel.isDestroyed() && panel.isVisible()) {
+      const cb = panel.getContentBounds()
+      p = { bounds: cb, ...((await panel.webContents.executeJavaScript(panelJs).catch(() => ({}))) as object) }
+    }
+    const total = Object.values(store.state.caught).reduce((a, e) => a + (e?.total ?? 0), 0)
+    writeFileSync(file + '.tmp', JSON.stringify({ t: Date.now(), feeding, items, panel: p, album: store.state.album.length, caught: total }))
+    renameSync(file + '.tmp', file)
+  }, 100)
+}
+
 function runLab(name: string): void {
   const [w, h] = (env.PIGEON_SIZE ?? '1500x1000').split('x').map(Number)
   const win = new BrowserWindow({ width: w, height: h, show: !env.PIGEON_SHOT, transparent: name === 'icon', frame: name !== 'icon', webPreferences: { offscreen: !!env.PIGEON_SHOT } })
@@ -547,6 +569,7 @@ app.whenReady().then(() => {
     )
   }
   runScript()
+  runProbe()
   setupUpdater()
   app.on('activate', showPanel)
 })

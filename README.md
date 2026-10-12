@@ -5,7 +5,7 @@
 
 ## 다운로드
 
-- 맥 (애플 실리콘·인텔): [PigeonMonitor-mac.dmg](https://github.com/kanchoooo/pigeon-monitor/releases/latest/download/PigeonMonitor-mac.dmg)
+- 맥 13 이상 (애플 실리콘·인텔): [PigeonMonitor-mac.dmg](https://github.com/kanchoooo/pigeon-monitor/releases/latest/download/PigeonMonitor-mac.dmg)
 - 윈도우 10/11: [PigeonMonitor-Setup.exe](https://github.com/kanchoooo/pigeon-monitor/releases/latest/download/PigeonMonitor-Setup.exe) — "Windows의 PC 보호" 창이 뜨면 **추가 정보 → 실행**
 - 다운로드 페이지: https://kanchoooo.github.io/pigeon-monitor/ (`docs/index.html`)
 

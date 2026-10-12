@@ -8,7 +8,7 @@ const stage = document.getElementById('stage')!
 const debug = new URLSearchParams(location.search).has('debug')
 const world = new World(stage, (r) => api.report(r))
 // 자동 테스트에서 비둘기 위치를 찾을 수 있게
-if (debug) (window as unknown as { __world: World }).__world = world
+if (debug || new URLSearchParams(location.search).has('expose')) (window as unknown as { __world: World }).__world = world
 
 // ── 모이 주기 안내 + 커서에 붙는 모이 봉투
 const hud = document.createElement('div')

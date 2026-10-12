@@ -16,6 +16,7 @@ import { join } from 'path'
  *  PIGEON_LOG=1              렌더러 콘솔을 터미널로
  *  PIGEON_NO_UPDATE=1        자동 업데이트 끄기
  *  PIGEON_SAVE_DIR=폴더      이미지·영상 저장 대화상자 대신 이 폴더에 바로 저장 (자동 테스트)
+ *  PIGEON_PROBE=파일.json    실기기 테스트: 비둘기·패널 버튼 위치(화면 좌표)를 0.1초마다 파일로
  */
 export const env = process.env
 

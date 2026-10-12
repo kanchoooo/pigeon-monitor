@@ -203,7 +203,7 @@ export class Overlays {
       this.exclude.delete(it.nativeId)
       if (this.items.get(d.id) === it) this.items.delete(d.id)
     })
-    loadRenderer(win, 'overlay', { query: headless || env.PIGEON_DEBUG_BG === '1' ? { debug: '1' } : undefined })
+    loadRenderer(win, 'overlay', { query: headless || env.PIGEON_DEBUG_BG === '1' ? { debug: '1' } : env.PIGEON_PROBE ? { expose: '1' } : undefined })
     this.items.set(d.id, it)
   }
 
@@ -341,6 +341,23 @@ export class Overlays {
       if (c.x < b.x || c.y < b.y || c.x >= b.x + b.width || c.y >= b.y + b.height) continue
       it.win.webContents.send('world:press', { x: c.x - b.x, y: c.y - b.y, button: p.left ? 0 : 2 })
     }
+  }
+
+  /** 실기기 테스트: 화면마다 비둘기 위치(화면 좌표)·모이·클릭 받는 중인지 */
+  async probe(): Promise<unknown[]> {
+    const out: unknown[] = []
+    for (const it of this.items.values()) {
+      if (!it.ready || it.win.isDestroyed()) continue
+      const w = (await it.win.webContents
+        .executeJavaScript(
+          `(() => { const w = window.__world; if (!w) return null; return { feeding: w.feeding, seeds: w.food.count, pigeons: w.pigeons.map(p => ({ id: p.id, st: p.st, x: p.center.x, y: p.center.y, breed: p.breed.id, leaving: p.leaving })) } })()`
+        )
+        .catch(() => null)) as { pigeons: { x: number; y: number }[] } | null
+      const b = it.display.bounds
+      if (w) for (const p of w.pigeons) Object.assign(p, { x: p.x + b.x, y: p.y + b.y })
+      out.push({ id: it.id, bounds: b, visible: it.win.isVisible(), interactive: it.interactive, world: w })
+    }
+    return out
   }
 
   /** 테스트 자동화: 가짜 창 바꾸기 */
